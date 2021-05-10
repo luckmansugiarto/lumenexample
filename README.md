@@ -1,5 +1,5 @@
-# Coding Challenge - Lumen
-This challenge covers **all of the provided tiers (ie. 1, 2, and 3)** and is created using the following stacks:
+# Lumen Example - REST API
+This project is used for demonstrating the ability to architect REST APIs using Lumen framework and TDD approach using PHPUnit. The stacks used are:
 **Laravel / Lumen**, **MySQL** for the database, and **Docker** containers that serve as the infrastructure.
 
 # Requirements
