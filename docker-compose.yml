@@ -1,0 +1,64 @@
+version: '3.5'
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/app/Dockerfile
+    container_name: app
+    depends_on:
+      - database
+    environment:
+      - WAIT_HOSTS=database:3306      # wait for database service to be ready first
+      - WAIT_HOSTS_TIMEOUT=300        # timeout the waiting after 5 minutes have elapsed.
+      - WEB_DOCUMENT_ROOT=/app/public
+    image: custom-app:latest
+    ports:
+      - "8080:80"
+    networks:
+      - default
+    user: ${CURRENT_ID}
+    volumes:
+      # root directory of the project
+      - ".:/app"
+      - "vendor:/app/vendor"
+
+  database:
+    container_name: mysql
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1 # Should be disabled on production
+      - MYSQL_USER=superuser
+      - MYSQL_PASSWORD=supersecure
+      - MYSQL_DATABASE=cengage
+    expose:
+      - "3306"
+    image: mysql:8.0.23
+    networks:
+      - default
+    ports:
+      - "3306:3306"
+    restart: always
+    volumes:
+      - "dbdata:/var/lib/mysql"
+
+  database_test:
+    container_name: mysql-test
+    environment:
+      - MYSQL_ALLOW_EMPTY_PASSWORD=1 # Should be disabled on production
+      - MYSQL_USER=superuser
+      - MYSQL_PASSWORD=supersecure
+      - MYSQL_DATABASE=cengage_test
+    expose:
+      - "3306"
+    image: mysql:8.0.23
+    networks:
+      - default
+    ports:
+      - "3307:3306"
+    restart: always
+
+networks:
+  default:
+volumes:
+  dbdata:
+  vendor:
